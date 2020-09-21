@@ -151,7 +151,7 @@ cp ~/dev/repos/omnishock/target/release/omnishock ~/dev/bin/
 
 # Append bin directory to the PATH variable. Change the path accordingly if
 # you put the bin directory somewhere else.
-echo "export PATH=\"\$HOME/dev/bin:\$PATH" >> ~/.profile
+echo "export PATH=\"\$HOME/dev/bin:\$PATH\"" >> ~/.profile
 ```
 
 Log out and back in for the changes to the PATH variable to take effect.
