@@ -105,7 +105,7 @@ on.
 
 ## Install Omnishock
 
-Follow the guide over at [https://github.com/ejuarezg/omnishock/#building-for-the-raspberry-pi-1-b](my fork of the omnishock repo.)
+Follow the guide over at [my fork of the omnishock repo.](https://github.com/ejuarezg/omnishock/#building-for-the-raspberry-pi-1-b)
 
 Place the binary somewhere that the system can see it. For example
 ```sh
