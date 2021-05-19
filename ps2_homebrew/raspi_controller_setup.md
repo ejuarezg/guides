@@ -50,22 +50,7 @@ sudo apt-get upgrade
 sudo apt-get install libsdl2-dev
 ```
 
-We will also need to install Rust to build omnishock. Follow the default options during the installation process.
-```sh
-# Create a directory to store downloads and keep things tidy
-mkdir ~/dev
-cd ~/dev
-
-# Download installation script
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > ~/dev/rustup.sh
-sh ~/dev/rustup.sh`
-```
-
-The Rust installation script will modify `~/.profile`. Log out and back in
-for the changes to take effect. If unsure, a reboot will correctly apply the
-changes.
-
-## Installaing Bluetooth Software
+## Installing Bluetooth Software
 
 A important, yet optional, program is
 [bluetooth-disconnect.](https://github.com/jrouleau/bluetooth-autoconnect) This
@@ -120,29 +105,9 @@ on.
 
 ## Install Omnishock
 
-With the prerequisites out of the way, we can now move on to compiling
-omnishock. This actually one of the easiest parts of the entire process,
-albeit, it takes the longest to complete.
+Follow the guide over at [https://github.com/ejuarezg/omnishock/#building-for-the-raspberry-pi-1-b](my fork of the omnishock repo.)
 
-We will first clone the [GitHub repository of
-omnishock](https://github.com/ticky/omnishock/) and then use Rust tool named
-cargo to compile it. Simply run the following commands.
-```sh
-cd ~/dev/repos
-
-# Clone repo
-git clone --recurse-submodules https://github.com/ticky/omnishock.git
-cd omnishock
-
-# Compile
-cargo build --release
-```
-
-Be prepared to wait a while for the compilation to complete. I had to wait 2:45
-hours last time I did it.
-
-Now that we compiled omnishock, let's put in somewhere that the system can see
-it.
+Place the binary somewhere that the system can see it. For example
 ```sh
 # You can create this bin directory wherever you'd like, just remember where
 # you put it.
@@ -159,7 +124,7 @@ Log out and back in for the changes to the PATH variable to take effect.
 ## That's all Folks!
 
 If all went well, you can test your controller by connecting it via Bluetooth
-or wired to your Pi and running `omnishock test`. The button presses should
+or wire to your Pi and running `omnishock test`. The button presses should
 start spewing out on your terminal.
 
 All that remains is to install [Aaron Clovsky's or Johnny Chung Lee's Teensy
