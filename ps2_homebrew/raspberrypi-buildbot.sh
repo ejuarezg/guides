@@ -44,7 +44,8 @@ set -e
 set -x
 
 # Install ccache
-apt install -y ccache
+apt update
+apt install -y --no-install-recommends ccache
 
 # Copy source files to parent dir
 mkdir -p "${PARENTDIR}"
