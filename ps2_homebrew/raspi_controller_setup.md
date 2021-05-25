@@ -1,11 +1,8 @@
 # Raspberry Pi 1 Model B+ Setup for PS2 Controller
 
-This guide will help you install software on your Pi that allows you to use
-modern gaming controllers to play games on your PlayStation 2.
+This guide will help you install software on your Pi that allows you to use modern gaming controllers to play games on your PlayStation 2.
 
-The Pi 1 B+ is targeted since it is cheaper than the newer revisions and will
-remain in production until [at least January
-2026.](https://www.raspberrypi.org/products/raspberry-pi-1-model-b-plus/)
+The Pi 1 B+ is targeted since it is cheaper than the newer revisions and will remain in production until [at least January 2026.](https://www.raspberrypi.org/products/raspberry-pi-1-model-b-plus/)
 
 ## Prerequisite Hardware
 
@@ -17,57 +14,25 @@ remain in production until [at least January
 
 ## Installing Raspberry Pi OS
 
-We will be using Raspberry Pi OS (previous known as Raspbian) as our OS. This
-OS contains the required up-to-date software.
+We will be using Raspberry Pi OS (previous known as Raspbian) as our OS. This OS contains the required up-to-date software.
 
-To get started, head on over to the [Pi downloads
-website](https://www.raspberrypi.org/downloads/), click on the icon that takes
-you to the download page, and download the version that says **Raspberry Pi OS
-(32-bit) with desktop**. The desktop version will allow us to easily configure
-the OS after installation. Follow the installation guide linked in the download
-page if you are unsure on how to flash the image to an SD card.
+To get started, head on over to the [Pi downloads website](https://www.raspberrypi.org/downloads/), click on the icon that takes you to the download page, and download the version that says **Raspberry Pi OS (32-bit) with desktop**. The desktop version will allow us to easily configure the OS after installation. Follow the installation guide linked in the download page if you are unsure on how to flash the image to an SD card.
 
-After successfully booting into the OS for the first itime, enable network
-connectivity, enable SSH, and change any other settings. The rest of this guide
-will assume that you are able to access a relatively vanilla installation of
-Rasp Pi OS using SSH or keyboard & mouse input.
+**Note:** For advanced users, I would recommned using the lite OS installation.
 
-## Install Prerequisite Software for Omnishock
+After successfully booting into the OS for the first itime, enable network connectivity, enable SSH, and change any other settings. The rest of this guide will assume that you are able to access a relatively vanilla installation of Rasp Pi OS using SSH or keyboard & mouse input.
 
-The central piece of software we will be installing is
-[omnishock](https://github.com/ticky/omnishock/). Omnishock will us to use any
-controller supported by the [SDL game controller
-database](https://github.com/gabomdq/SDL_GameControllerDB/) to play games on
-the PS2.
+## Installing Bluetooth Software (Optional)
 
-Let's being by installing the prerequisite software for omnishock with
-```sh
-# Update the system
-sudo apt-get update
-sudo apt-get upgrade
+A important, yet optional, program is [bluetooth-disconnect.](https://github.com/jrouleau/bluetooth-autoconnect) This program will allow the Pi to reconnect to Bluetooth controllers (and any other Bluetooth devices) automatically **once they have been paired and trusted.**
 
-# Install SDL2 dev package
-sudo apt-get install libsdl2-dev
-```
-
-## Installing Bluetooth Software
-
-A important, yet optional, program is
-[bluetooth-disconnect.](https://github.com/jrouleau/bluetooth-autoconnect) This
-program will allow the Pi to reconnect to Bluetooth controllers (and any other
-Bluetooth devices) automatically **once they have been paired and trusted.**
-
-Unfortunately, I am not the best person to show you how to pair your controller
-to your Pi via Bluetooth. This process can vary from controller to controller
-and can be confusing. However, I can point you to some resources that helped me
-out and will hopefully help you. Here they are:
+Unfortunately, I am not the best person to show you how to pair your controller to your Pi via Bluetooth. This process can vary from controller to controller and can be confusing. However, I can point you to some resources that helped me out and will hopefully help you. Here they are:
 - https://wiki.gentoo.org/wiki/Sony_DualShock (this guide worked for my
   DualShock 3)
 - https://wiki.archlinux.org/index.php/Bluetooth (handy for troubleshooting)
 - [Omnishock repo](https://github.com/ticky/omnishock/)
 
-Once you manage to pair and trust your Bluetooth controller, you can install
-bluetooth-disconnect with the following commands:
+Once you manage to pair and trust your Bluetooth controller, you can install bluetooth-disconnect with the following commands:
 ```sh
 # Keep things tidy
 mkdir -p ~/dev/repos
@@ -84,15 +49,12 @@ cd bluetooth-autoconnect
 sudo cp bluetooth-autoconnect.service /etc/systemd/system/
 ```
 
-After copying the service file, edit
-`/etc/systemd/system/bluetooth-autoconnect.service` by replacingg the line
-starting with `ExecStart` with
+After copying the service file, edit `/etc/systemd/system/bluetooth-autoconnect.service` by replacing the line starting with `ExecStart` with
 ```
 ExecStart=/home/pi/dev/repos/bluetooth-autoconnect/bluetooth-autoconnect -d
 ```
 
-This change updates the location of the bluetooth-disconnect script. Make sure
-to edit the service file with elevated privileges.
+This change updates the location of the bluetooth-disconnect script. Make sure to edit the service file with elevated privileges.
 
 The final step is to enable the service with the command
 ```sh
@@ -100,43 +62,58 @@ The final step is to enable the service with the command
 sudo systemctl enable --now bluetooth-autoconnect
 ```
 
-Your controller should now automatically reconnect to your Pi when you turn it
-on.
+Your controller should now automatically reconnect to your Pi when you turn it on.
 
 ## Install Omnishock
 
-Follow the guide over at [my fork of the omnishock repo.](https://github.com/ejuarezg/omnishock/#building-for-the-raspberry-pi-1-b)
+The central piece of software we will be installing is [omnishock](https://github.com/ticky/omnishock/). Omnishock will us to use any controller supported by the [SDL game controller database](https://github.com/gabomdq/SDL_GameControllerDB/) to play games on the PS2.
 
-Place the binary somewhere that the system can see it. For example
+Follow the guide over at [my fork of the omnishock repo.](https://github.com/ejuarezg/omnishock/#building-for-the-raspberry-pi-1-b) My fork contains a Dockerfile for an easier compilation process.
+
+Place the binary somewhere that the system can see it. For example, in `~/dev/bin`. Then
 ```sh
-# You can create this bin directory wherever you'd like, just remember where
-# you put it.
-mkdir ~/dev/bin
-cp ~/dev/repos/omnishock/target/release/omnishock ~/dev/bin/
-
 # Append bin directory to the PATH variable. Change the path accordingly if
 # you put the bin directory somewhere else.
-echo "export PATH=\"\$HOME/dev/bin:\$PATH\"" >> ~/.profile
+echo 'export PATH="$HOME/dev/bin:$PATH"' >> ~/.profile
 ```
 
 Log out and back in for the changes to the PATH variable to take effect.
 
-## That's all Folks!
+## Install SDL2
 
-If all went well, you can test your controller by connecting it via Bluetooth
-or wire to your Pi and running `omnishock test`. The button presses should
-start spewing out on your terminal.
+We'll be using the omnishock container to build a recent version of SDL2. Recent versions of SDL2 are not provided by Raspberry Pi OS. These recent versions allow us to use newer hardware, like the Xbox Series and PS5 controllers.
 
-All that remains is to install [Aaron Clovsky's or Johnny Chung Lee's Teensy
-firmware.](https://github.com/ticky/omnishock/#supported-hardware)
+**Note:** Complete this only after creating the omnishock container in the previous section.
+
+While in the directory of this file, download the tar file for the SDL source code from https://www.libsdl.org/download-2.0.php or https://github.com/libsdl-org/SDL/releases and place it in this directory. Build SDL using
+```sh
+podman run -it --rm -v $PWD:/mnt raspi1-bplus-gnu-omnishock bash /mnt/raspberrypi-buildbot.sh
+```
+
+The installable tar file will be placed in this directory and will be called `sdl-raspberrypi.tar.xz`. If you're afraid of this entire process, you can download an official precompiled binary from https://buildbot.libsdl.org/sdl-builds/sdl-raspberrypi/?C=M;O=D.
+
+Install the tar file of SDL2 by extracting it into the root folder on the Pi:
+```sh
+sudo tar xf /path/to/sdl-raspberrypi.tar.xz -C /
+echo "/usr/local/lib" | sudo tee -a /etc/ld.so.conf.d/usr-local.conf
+sudo ldconfig
+```
+
+The last two commands are so that the shared libraries in `/usr/local/lib` are detected by the system.
+
+## That's All Folks!
+
+If all went well, you can test your controller by connecting it via Bluetooth or wire to your Pi and running `omnishock test`. The button presses should start spewing out on your terminal.
+
+All that remains is to install [Aaron Clovsky's or Johnny Chung Lee's Teensy firmware.](https://github.com/ticky/omnishock/#supported-hardware)
 
 ## Todo
 
 This list is a reminder of things I can do to improve this guide.
 
-- Use the Lite image of Raspberry Pi OS
-- Decrease the boot time of Pi
+- Create a `.deb` for the precompiled SDL2 so that the user can easily remove and update SDL2.
+- Optimize OS
     - Remove networking and other services
     - Minimize/eliminate file corruption
     - Get OS boot time close to Aaron Clovsky's original version
-- Cross-compile omnishock to avoid waiting such... a... long... time.
+
