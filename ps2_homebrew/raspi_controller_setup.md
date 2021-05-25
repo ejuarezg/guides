@@ -66,7 +66,7 @@ Your controller should now automatically reconnect to your Pi when you turn it o
 
 ## Install Omnishock
 
-The central piece of software we will be installing is [omnishock](https://github.com/ticky/omnishock/). Omnishock will us to use any controller supported by the [SDL game controller database](https://github.com/gabomdq/SDL_GameControllerDB/) to play games on the PS2.
+The central piece of software we will be installing is [omnishock](https://github.com/ticky/omnishock/). Omnishock will allow us to use any controller supported by the [SDL game controller database](https://github.com/gabomdq/SDL_GameControllerDB/) to play games on the PS2.
 
 Follow the guide over at [my fork of the omnishock repo.](https://github.com/ejuarezg/omnishock/#building-for-the-raspberry-pi-1-b) My fork contains a Dockerfile for an easier compilation process.
 
