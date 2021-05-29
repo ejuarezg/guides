@@ -49,14 +49,12 @@ apt install -y --no-install-recommends ccache
 
 # Copy source files to parent dir
 mkdir -p "${PARENTDIR}"
-cp /mnt/{*.sh,*.tar.*} "${PARENTDIR}"
+cp /mnt/SDL2-*.tar.gz /mnt/create-control-file.sh "${PARENTDIR}"
 pushd "${PARENTDIR}"
 
 # Extract source file
-tar xf *.tar.gz --strip-components=1
+tar xf SDL2-*.tar.gz --strip-components=1
 
-rm -f $TARBALL
-rm -rf $BUILDBOTDIR
 mkdir -p $BUILDBOTDIR
 pushd $BUILDBOTDIR
 
@@ -70,19 +68,34 @@ export CC="ccache /opt/cross-pi-gcc/bin/arm-linux-gnueabihf-gcc \
     -I$SYSROOT/usr/include/arm-linux-gnueabihf \
     -L$SYSROOT/opt/vc/lib"
 # -L$SYSROOT/usr/lib/arm-linux-gnueabihf"
-# FIXME: shouldn't have to --disable-* things here.
+# !!! FIXME: shouldn't have to --disable-* things here.
 ../configure --with-sysroot=$SYSROOT --host=arm-raspberry-linux-gnueabihf \
     --prefix=$PWD/rpi-sdl2-installed --disable-pulseaudio --disable-esd \
     --disable-video-wayland
 $MAKE
 $MAKE install
 # Fix up a few things to a real install path on a real Raspberry Pi...
-perl -w -pi -e "s#$PWD/rpi-sdl2-installed#/usr/local#g;" ./rpi-sdl2-installed/lib/libSDL2.la ./rpi-sdl2-installed/lib/pkgconfig/sdl2.pc ./rpi-sdl2-installed/bin/sdl2-config
+perl -w -pi -e "s#$PWD/rpi-sdl2-installed#/usr/local#g;" ./rpi-sdl2-installed/lib/libSDL2.la \
+    ./rpi-sdl2-installed/lib/pkgconfig/sdl2.pc ./rpi-sdl2-installed/bin/sdl2-config
 mkdir -p ./usr
 mv ./rpi-sdl2-installed ./usr/local
-tar -cJvvf $TARBALL usr
+tar -cJvvf "$TARBALL" usr
+cp "$TARBALL" /mnt
 popd
-cp "$BUILDBOTDIR/$TARBALL" /mnt
+
+# Create deb file
+sh create-control-file.sh
+mkdir deb
+mv debian deb/DEBIAN
+mv "$BUILDBOTDIR/usr/local" deb/usr
+pushd deb
+perl -w -pi -e "s#/usr/local#/#g;" ./usr/lib/libSDL2.la ./usr/lib/pkgconfig/sdl2.pc \
+    ./usr/bin/sdl2-config
+mv ../control DEBIAN
+rm -rf DEBIAN/source
+dpkg-deb -b . ../libsdl2-2.0-0.deb
+popd
+cp *.deb /mnt
 
 set +x
-echo "All done. Final installable is in $TARBALL ...";
+echo "All done. Final installable is in $TARBALL or libsdl2-2.0-0.deb.";

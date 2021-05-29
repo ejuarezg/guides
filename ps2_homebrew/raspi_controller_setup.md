@@ -90,15 +90,16 @@ While in the directory of this file, download the tar file for the SDL source co
 podman run -it --rm -v $PWD:/mnt raspi1-bplus-gnu-omnishock bash /mnt/raspberrypi-buildbot.sh
 ```
 
-The installable tar file will be placed in this directory and will be called `sdl-raspberrypi.tar.xz`. If you're afraid of this entire process, you can download an official precompiled binary from https://buildbot.libsdl.org/sdl-builds/sdl-raspberrypi/?C=M;O=D.
+An installable tar file and `.deb` file will be placed in this directory and will be called `sdl-raspberrypi.tar.xz` and `libsdl2-2.0-0.deb`, respectively. Official precompiled binaries are provided at https://buildbot.libsdl.org/sdl-builds/sdl-raspberrypi/?C=M;O=D if you wish to avoid this compilation process.
 
-Install the tar file of SDL2 by extracting it into the root folder on the Pi:
+I recommend installing the `.deb` file instead of the tar file. It is able to be removed and updated more easily. Run `sudo dpkg -i libsdl2-2.0-0.deb` on the Pi to install it.
+
+To install the tar file of SDL2, extract it into the root folder of the Pi with the following commands:
 ```sh
 sudo tar xf /path/to/sdl-raspberrypi.tar.xz -C /
 echo "/usr/local/lib" | sudo tee -a /etc/ld.so.conf.d/usr-local.conf
 sudo ldconfig
 ```
-
 The last two commands are so that the shared libraries in `/usr/local/lib` are detected by the system.
 
 ## That's All Folks!
@@ -111,7 +112,7 @@ All that remains is to install [Aaron Clovsky's or Johnny Chung Lee's Teensy fir
 
 This list is a reminder of things I can do to improve this guide.
 
-- Create a `.deb` for the precompiled SDL2 so that the user can easily remove and update SDL2.
+- Follow the packaging guidelines of a `.deb` file more closely
 - Optimize OS
     - Remove networking and other services
     - Minimize/eliminate file corruption
