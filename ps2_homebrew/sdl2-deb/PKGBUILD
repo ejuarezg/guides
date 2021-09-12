@@ -1,0 +1,51 @@
+# Maintainer: Foo Bar <foobar@example.com>
+
+pkgname=libsdl2-2.0-0
+# See https://www.debian.org/doc/debian-policy/ch-controlfields.html#version
+pkgver=2.0.16
+pkgrel=1
+pkgdesc="A library for portable low-level access to a video framebuffer, audio output, mouse, and keyboard (Version 2)"
+arch=('x86_64') # must be this arch even though I'm building for armhf
+url="https://www.libsdl.org"
+license=('MIT')
+makedepends=('ccache')
+source=("https://www.libsdl.org/release/SDL2-${pkgver}.tar.gz")
+sha512sums=('ec75ef8526792650c2647b78bb0244f973774418aeae33a2182d90ce696b30acb652f8be9c2012a16c1c5d5622f7630ff2e1eadae27ea3dc78ab47730cf5e62f')
+
+build() {
+	cd "SDL2-$pkgver"
+	SYSROOT="/raspberrypi/rootfs"
+    export CC="ccache /opt/cross-pi-gcc/bin/arm-linux-gnueabihf-gcc \
+        --sysroot=$SYSROOT \
+        -I$SYSROOT/opt/vc/include \
+        -I$SYSROOT/usr/include \
+        -I$SYSROOT/opt/vc/include/interface/vcos/pthreads \
+        -I$SYSROOT/opt/vc/include/interface/vmcs_host/linux \
+        -I$SYSROOT/usr/include/arm-linux-gnueabihf \
+        -L$SYSROOT/opt/vc/lib"
+    # TODO: Trim exports
+    export PATH="/opt/cross-pi-gcc/bin:$PATH"
+    export CARGO_TARGET_ARM_UNKNOWN_LINUX_GNUEABIHF_LINKER=arm-linux-gnueabihf-gcc
+    export CARGO_TARGET_ARM_UNKNOWN_LINUX_GNUEABIHF_RUNNER=qemu-arm
+    export CC_arm_unknown_linux_gnueabihf=arm-linux-gnueabihf-gcc
+    export CXX_arm_unknown_linux_gnueabihf=arm-linux-gnueabihf-g++
+    export QEMU_LD_PREFIX=/opt/cross-pi-gcc/arm-linux-gnueabihf/libc
+    export LD_LIBRARY_PATH=/opt/cross-pi-gcc/arm-linux-gnueabihf/libc/lib:/opt/cross-pi-gcc/arm-linux-gnueabihf/lib:/opt/cross-pi-gcc/lib
+    export RUST_TEST_THREADS=1
+    export CFLAGS="-mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard"
+    export CXXFLAGS="-mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard"
+    export PKG_CONFIG_PATH="/usr/lib/arm-linux-gnueabihf/pkgconfig/:$PKG_CONFIG_PATH"
+    ./configure --with-sysroot=$SYSROOT \
+        --host=arm-raspberry-linux-gnueabihf \
+        --prefix=/usr \
+        --disable-pulseaudio \
+        --disable-esd \
+        --disable-video-wayland
+	make
+}
+
+package() {
+	cd "SDL2-$pkgver"
+	make DESTDIR="$pkgdir/" install
+}
+

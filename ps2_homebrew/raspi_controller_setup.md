@@ -85,21 +85,15 @@ We'll be using the omnishock container to build a recent version of SDL2. Recent
 
 **Note:** Complete this only after creating the omnishock container in the previous section.
 
-While in the directory of this file, download the tar file for the SDL source code from https://www.libsdl.org/download-2.0.php or https://github.com/libsdl-org/SDL/releases and place it in this directory. Build SDL using
+While in the directory of this file, modify the `pkgver` variable in `sdl2-deb/PKGBUILD` with the version of SDL2 that you would like to build (see https://www.libsdl.org/download-2.0.php). Then, build SDL2 using
 ```sh
-podman run -it --rm -v $PWD:/mnt raspi1-bplus-gnu-omnishock bash /mnt/raspberrypi-buildbot.sh
+podman run -it --rm -v "$PWD/sdl2-deb":/mnt raspi1-bplus-gnu-omnishock bash /mnt/make-deb.sh
 ```
 
-The installable tar file will be placed in this directory and will be called `sdl-raspberrypi.tar.xz`. If you're afraid of this entire process, you can download an official precompiled binary from https://buildbot.libsdl.org/sdl-builds/sdl-raspberrypi/?C=M;O=D.
-
-Install the tar file of SDL2 by extracting it into the root folder on the Pi:
+The installable `.deb` file will be placed in the `sdl2-deb` directory. Copy it over to you pi and install it with:
 ```sh
-sudo tar xf /path/to/sdl-raspberrypi.tar.xz -C /
-echo "/usr/local/lib" | sudo tee -a /etc/ld.so.conf.d/usr-local.conf
-sudo ldconfig
+sudo apt install /path/to/deb/file
 ```
-
-The last two commands are so that the shared libraries in `/usr/local/lib` are detected by the system.
 
 ## That's All Folks!
 
