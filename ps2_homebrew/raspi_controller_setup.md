@@ -18,9 +18,9 @@ We will be using Raspberry Pi OS (previous known as Raspbian) as our OS. This OS
 
 To get started, head on over to the [Pi downloads website](https://www.raspberrypi.org/downloads/), click on the icon that takes you to the download page, and download the version that says **Raspberry Pi OS (32-bit) with desktop**. The desktop version will allow us to easily configure the OS after installation. Follow the installation guide linked in the download page if you are unsure on how to flash the image to an SD card.
 
-**Note:** For advanced users, I would recommned using the lite OS installation.
+**Note:** For advanced users, I would recommend using the lite OS installation.
 
-After successfully booting into the OS for the first itime, enable network connectivity, enable SSH, and change any other settings. The rest of this guide will assume that you are able to access a relatively vanilla installation of Rasp Pi OS using SSH or keyboard & mouse input.
+After successfully booting into the OS for the first time, enable network connectivity, enable SSH, and change any other settings. The rest of this guide will assume that you are able to access a relatively vanilla installation of Rasp Pi OS using SSH or keyboard & mouse input.
 
 ## Installing Bluetooth Software (Optional)
 
@@ -90,7 +90,7 @@ While in the directory of this file, modify the `pkgver` variable in `sdl2-deb/P
 podman run -it --rm -v "$PWD/sdl2-deb":/mnt raspi1-bplus-gnu-omnishock bash /mnt/make-deb.sh
 ```
 
-The installable `.deb` file will be placed in the `sdl2-deb` directory. Copy it over to you pi and install it with:
+The installable `.deb` file will be placed in the `sdl2-deb` directory. Copy it over to your pi and install it with:
 ```sh
 sudo apt install /path/to/deb/file
 ```
