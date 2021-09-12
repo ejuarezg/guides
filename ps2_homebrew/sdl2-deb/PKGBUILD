@@ -14,7 +14,7 @@ sha512sums=('ec75ef8526792650c2647b78bb0244f973774418aeae33a2182d90ce696b30acb65
 
 build() {
 	cd "SDL2-$pkgver"
-	SYSROOT="/raspberrypi/rootfs"
+	SYSROOT="/opt/rpi-rootfs"
     export CC="ccache /opt/cross-pi-gcc/bin/arm-linux-gnueabihf-gcc \
         --sysroot=$SYSROOT \
         -I$SYSROOT/opt/vc/include \
