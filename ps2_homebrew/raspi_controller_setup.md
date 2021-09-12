@@ -105,7 +105,7 @@ All that remains is to install [Aaron Clovsky's or Johnny Chung Lee's Teensy fir
 
 This list is a reminder of things I can do to improve this guide.
 
-- Create a `.deb` for the precompiled SDL2 so that the user can easily remove and update SDL2.
+- Follow the packaging guidelines of a `.deb` file more closely
 - Optimize OS
     - Remove networking and other services
     - Minimize/eliminate file corruption
