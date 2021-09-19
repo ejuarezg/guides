@@ -64,6 +64,16 @@ sudo systemctl enable --now bluetooth-autoconnect
 
 Your controller should now automatically reconnect to your Pi when you turn it on.
 
+## Handling issues
+
+If you note that your bluetooth controller isn't working, and `systemctl status bluetooth` shows errors, use the following links for troubleshooting:
+
+- https://raspberrypi.stackexchange.com/questions/40839/sap-error-on-bluetooth-service-status
+- https://raspberrypi.stackexchange.com/questions/71333/bluetooth-does-not-work-with-raspbian-stretch-and-raspberry-pi-3
+- https://peppe8o.com/fixed-connect-bluetooth-headphones-with-your-raspberry-pi/
+
+I personally had to disable SAP plugin (issue in first link) and add user to bluetooth grup (issue in second link). I'm ignoring the `Failed to set privacy: Rejected (0x0b)` for now, as controller still works.
+
 ## Install Omnishock
 
 The central piece of software we will be installing is [omnishock](https://github.com/ticky/omnishock/). Omnishock will allow us to use any controller supported by the [SDL game controller database](https://github.com/gabomdq/SDL_GameControllerDB/) to play games on the PS2.
