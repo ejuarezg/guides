@@ -64,7 +64,7 @@ sudo systemctl enable --now bluetooth-autoconnect
 
 Your controller should now automatically reconnect to your Pi when you turn it on.
 
-## Handling issues
+### Handling issues
 
 If you note that your bluetooth controller isn't working, and `systemctl status bluetooth` shows errors, use the following links for troubleshooting:
 
